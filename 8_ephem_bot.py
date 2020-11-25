@@ -13,6 +13,8 @@
 
 """
 import logging
+import ephem
+
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
@@ -32,21 +34,40 @@ PROXY = {
 
 def greet_user(update, context):
     text = 'Вызван /start'
-    print(text)
+    # print(text)
     update.message.reply_text(text)
+
+
+def mars(update, context):
+    user_text = update.message.text.split()[-1].lower()
+    # print("text ", user_text)
+
+    if user_text == "mars":
+        data = ephem.Mars(ephem.now())
+        text = f"Сегодня в созвездии {ephem.constellation(data)[1]}"
+        update.message.reply_text(text)
+    elif user_text == "jupiter":
+        data = ephem.Jupiter(ephem.now())
+        text = f"Сегодня в созвездии {ephem.constellation(data)[1]}"
+        update.message.reply_text(text)
+    else:
+        text = "У меня нет данных о данной планете. Попробуй mars или Jupiter"
+        update.message.reply_text(text)
+    
 
 
 def talk_to_me(update, context):
     user_text = update.message.text
-    print(user_text)
-    update.message.reply_text(text)
+    # print(user_text)
+    update.message.reply_text(user_text)
 
 
 def main():
-    mybot = Updater("КЛЮЧ, КОТОРЫЙ НАМ ВЫДАЛ BotFather", request_kwargs=PROXY, use_context=True)
+    mybot = Updater("1401318062:AAEeLSUKv2v3I4qnDb5RxCgfajSpM8BW_KA", request_kwargs=PROXY, use_context=True)
 
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
+    dp.add_handler(CommandHandler("planet", mars))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
     mybot.start_polling()
