@@ -43,12 +43,14 @@ def mars(update, context):
     # print("text ", user_text)
 
     if user_text == "mars":
-        data = ephem.Mars(ephem.now())
-        text = f"Сегодня в созвездии {ephem.constellation(data)[1]}"
+        # data = ephem.Mars(ephem.now())
+        data = getattr(ephem, "Mars")
+        text = f"Сегодня в созвездии {ephem.constellation(data(ephem.now()))[1]}"
         update.message.reply_text(text)
     elif user_text == "jupiter":
-        data = ephem.Jupiter(ephem.now())
-        text = f"Сегодня в созвездии {ephem.constellation(data)[1]}"
+        # data = ephem.Jupiter(ephem.now())
+        data = getattr(ephem, "Jupiter")
+        text = f"Сегодня в созвездии {ephem.constellation(data(ephem.now()))[1]}"
         update.message.reply_text(text)
     else:
         text = "У меня нет данных о данной планете. Попробуй mars или Jupiter"
