@@ -42,19 +42,27 @@ def mars(update, context):
     user_text = update.message.text.split()[-1].lower()
     # print("text ", user_text)
 
-    if user_text == "mars":
-        # data = ephem.Mars(ephem.now())
-        data = getattr(ephem, "Mars")
-        text = f"Сегодня в созвездии {ephem.constellation(data(ephem.now()))[1]}"
+    try:
+        planet = getattr(ephem, user_text.capitalize())
+        text = f"Сегодня {user_text} в созвездии {ephem.constellation(planet(ephem.now()))[1]}"
         update.message.reply_text(text)
-    elif user_text == "jupiter":
-        # data = ephem.Jupiter(ephem.now())
-        data = getattr(ephem, "Jupiter")
-        text = f"Сегодня в созвездии {ephem.constellation(data(ephem.now()))[1]}"
+    except:
+        text = f"Я не знаю такую планету {user_text.capitalize()}.\nПопробуй ввести другую"
         update.message.reply_text(text)
-    else:
-        text = "У меня нет данных о данной планете. Попробуй mars или Jupiter"
-        update.message.reply_text(text)
+
+    # if user_text == "mars":
+    #     # data = ephem.Mars(ephem.now())
+    #     data = getattr(ephem, "Mars")
+    #     text = f"Сегодня в созвездии {ephem.constellation(data(ephem.now()))[1]}"      
+    #     update.message.reply_text(text)
+    # elif user_text == "jupiter":
+    #     # data = ephem.Jupiter(ephem.now())
+    #     data = getattr(ephem, "Jupiter")
+    #     text = f"Сегодня в созвездии {ephem.constellation(data(ephem.now()))[1]}"
+    #     update.message.reply_text(text)
+    # else:
+    #     text = "У меня нет данных о данной планете. Попробуй mars или Jupiter"
+    #     update.message.reply_text(text)
     
 
 
