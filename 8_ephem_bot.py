@@ -39,10 +39,10 @@ def greet_user(update, context):
 
 
 def mars(update, context):
-    user_text = update.message.text.split()[-1].lower()
     # print("text ", user_text)
 
     try:
+        user_text = update.message.text.split()[-1].lower()
         planet = getattr(ephem, user_text.capitalize())
         text = f"Сегодня {user_text} в созвездии {ephem.constellation(planet(ephem.now()))[1]}"
         update.message.reply_text(text)
@@ -65,6 +65,36 @@ def mars(update, context):
     #     update.message.reply_text(text)
     
 
+def wordcount(update, context):
+    # print("text ", user_text)
+    try:
+        user_text = update.message.text.split()
+        count_word = len(user_text) - 1
+        if count_word == 0:
+            text = f"нечего считать"
+            update.message.reply_text(text)
+        else:
+            text = f"{count_word} слов(а)"
+            update.message.reply_text(text)
+    except:
+        text = f"Что-то пошло не так"
+        update.message.reply_text(text)
+
+
+def next_full_moon(update, context):
+    user_text = update.message.text.split()
+    date = user_text[-1]
+    if len(user_text) > 2:
+        text = f"Что-то не то ввел. Води дату в таком виде \"2019-01-01\" "
+        update.message.reply_text(text)
+    elif len(user_text) == 0:
+        text = f"Что-то пошло не так"
+        update.message.reply_text(text)
+    else:
+        full_moon = ephem.next_full_moon(date)
+        text = f"Следующее полнолуние {full_moon}"
+        update.message.reply_text(text)
+
 
 def talk_to_me(update, context):
     user_text = update.message.text
@@ -78,6 +108,8 @@ def main():
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("planet", mars))
+    dp.add_handler(CommandHandler("wordcount", wordcount))
+    dp.add_handler(CommandHandler("next_full_moon", next_full_moon))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
     mybot.start_polling()
